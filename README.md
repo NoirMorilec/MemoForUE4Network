@@ -8,14 +8,14 @@
 ## C++ code to work with replication (template):
 ##### Replicate variables:
 Firstly create variable and then mark it as "replicated" (Dont forget to set "SetReplicates = true" and "ReplicateMovement = true"):
-```
+```cpp
 UPROPERTY(Replicated)
 AMyClass* Variable;
 ```
 
 ##### Then add it in the DOREPLIFETIME.
 Here you actually define the rules of replicating your variables:
-```
+```cpp
 void AYourCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     // Here we list the variables we want to replicate + a condition if wanted
@@ -23,14 +23,14 @@ void AYourCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 }
 ```
 Or with condition:
-```
+```cpp
 // Replicates the Variable only to the Owner of this Object/Class
     DOREPLIFETIME_CONDITION(AYourCharacter, Variable, COND_OwnerOnly);
 ```
 ## About RepNotify
 #### This section is about functions calling during any variable replicated
 Create variable and function:
-```
+```cpp
 UPROPERTY(ReplicatedUsing=OnRep_Variable)
 float Variable;
 
@@ -59,25 +59,25 @@ the Client must own the Actor that the RPC is being called on
     Actor's network update period.
 ##### C++ code example
 Add it in .h file:
-```
+```cpp
 UFUNCTION(Server, unreliable)
 void Server_DoSomething();
 ```
 And the following code in the .cpp file ([function_name]_implementation):
-```
+```cpp
 void AYourCharacter::Server_DoSomething_Implementation() {
 // DO STUFF!;
 }
 ```
 ##### Also you could add validation in the UPROPERTY and add "_Validation" in the function. It works like "Should we execute current function or not?":
 The .h file:
-```
+```cpp
 UFUNCTION(Server, unreliable, WithValidation)
 void Server_DoSomething();
 ```
 
 And in the .cpp file:
-```
+```cpp
 bool AYourCharacter::Server_DoSomething_Validate() {
 return true;
 }
